@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn-based Game</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 5px;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="board"></div>
+    <div id="status"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('gameState', (gameState) => {
+            updateBoard(gameState.board);
+            document.getElementById('status').innerText = `Current Turn: Player ${gameState.currentPlayer}`;
+        });
+
+        socket.on('invalidMove', (message) => {
+            alert(message.message);
+        });
+
+        function updateBoard(board) {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = ''; // Clear the board
+
+            for (let y = 0; y < board.length; y++) {
+                for (let x = 0; x < board[y].length; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.innerText = board[y][x] || '';
+                    cell.onclick = () => handleMove(x, y);
+                    boardElement.appendChild(cell);
+                }
+            }
+        }
+
+        function handleMove(x, y) {
+            const move = prompt('Enter your move (e.g., P1:L)');
+            socket.emit('makeMove', { player: 'A', move }); // Replace 'A' with actual player ID
+        }
+    </script>
+</body>
+</html>
