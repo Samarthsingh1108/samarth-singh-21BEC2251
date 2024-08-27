@@ -169,3 +169,31 @@ const renderGameBoard = (gameState) => {
 **5. Game Logic Integration**
 
 Linking Moves to UI: Allow players to click on characters, see valid moves, and submit those moves to the server.
+
+**Run the Server**
+```
+node index.js
+```
+**Accessing the Game**
+
+Open your web browser and go to http://localhost:3000.
+
+You should see a 5x5 grid representing the game board.
+
+Players can make moves by clicking on a cell and entering the move in the prompt.
+
+**WebSocket Connection:** This script establishes a WebSocket connection to the server at 'ws://localhost:8080'.
+
+**Message Handling:** It handles incoming messages from the server. If the message is a gameState update, the game board is re-rendered. If the message indicates an invalidMove, an alert is displayed.
+
+**Rendering the Game Board:** The renderGameBoard function updates the game board based on the current state. Each cell is represented as a div element. If the cell contains a character, it is displayed, and a click event is attached to show valid moves if it's the player's turn.
+
+**Sending Moves:** The sendMove function sends the player's move to the server via WebSocket.
+
+**Displaying Valid Moves:** The displayValidMoves function shows buttons for valid moves under the game board when a character is selected.
+
+**Move Validation:** The getValidMoves function determines the possible moves based on the character type and position.
+
+**Initial Setup:** The game board is rendered with an empty grid when the page is first loaded, ensuring the interface is ready for updates from the server.
+
+
